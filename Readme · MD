@@ -1,0 +1,59 @@
+# SmartTools Bot (@SmartTools333Bot)
+
+A Telegram bot with a menu of tools. Currently includes:
+- Word Counter
+
+Built with error handling so it won't crash on a bad message or a dropped
+connection — errors are logged and the bot keeps running.
+
+## Step 1 — Get your bot token
+1. Open Telegram, search for **@BotFather**
+2. If you haven't registered `@SmartTools333Bot` yet, send `/newbot` and follow the prompts
+3. BotFather gives you a token that looks like `123456789:AAExampleTokenHere`
+4. Copy it — you'll paste it into Railway in Step 3 (never paste it into code or GitHub)
+
+## Step 2 — Push this code to GitHub
+In this folder, run:
+```bash
+git init
+git add .
+git commit -m "SmartTools bot - word counter"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/smarttools-bot.git
+git push -u origin main
+```
+Replace `YOUR_USERNAME` with your GitHub username. Create the empty repo on
+GitHub first if you haven't already (github.com → New repository).
+
+## Step 3 — Deploy on Railway
+1. Go to https://railway.app and log in with GitHub
+2. Click **New Project → Deploy from GitHub repo**
+3. Select your `smarttools-bot` repo
+4. Click on the deployed service → **Variables** tab → **New Variable**
+   - Name: `BOT_TOKEN`
+   - Value: (paste the token from Step 1)
+5. Railway reads the `Procfile` and runs `python bot.py` automatically
+6. Check the **Deployments → View Logs** tab — you should see:
+   `Bot starting with polling...`
+   If you see that line with no errors below it, it's live.
+
+## Step 4 — Test it
+Open Telegram, go to `@SmartTools333Bot`, send `/start`. You should get the
+menu with the Word Counter button.
+
+## Common mistakes to avoid
+- Don't put your token directly in `bot.py` — always use the Railway
+  `BOT_TOKEN` variable. If the token leaks (e.g. pushed to GitHub), revoke it
+  in BotFather with `/revoke` and generate a new one.
+- Only run **one instance** of the bot at a time (don't also run it locally
+  while it's live on Railway) — Telegram will throw a "Conflict" error if two
+  processes poll with the same token simultaneously.
+- Make sure the repo's root contains `bot.py`, `requirements.txt`, and
+  `Procfile` directly (not nested inside a subfolder), or Railway won't find
+  them.
+
+## Adding more tools later
+1. Add a new button in `main_menu_keyboard()` in `bot.py`
+2. Add a matching `if query.data == "your_tool":` block in `button_handler()`
+3. Add handling logic in `handle_text()` (or a new handler for images/files)
+4. Commit and push to GitHub — Railway auto-redeploys on every push
